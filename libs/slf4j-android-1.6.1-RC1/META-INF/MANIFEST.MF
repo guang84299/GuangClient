@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: 1.6.0_20 (Sun Microsystems Inc.)
+Built-By: Thorsten
+Build-Jdk: 1.6.0_20
+Specification-Title: SLF4J API and Google Android Binding
+Specification-Version: 1.6.1-RC1
+Specification-Vendor: SLF4J.org
+Implementation-Title: SLF4J API and Google Android Binding
+Implementation-Version: 1.6.1-RC1
+Implementation-Vendor-Id: org.slf4j
+Implementation-Vendor: SLF4J.org
+Export-Package: org.slf4j;uses:="org.slf4j.helpers,org.slf4j.spi";vers
+ ion="1.6.1.RC1",org.slf4j.spi;uses:="org.slf4j";version="1.6.1.RC1",o
+ rg.slf4j.helpers;uses:="org.slf4j.spi,org.slf4j";version="1.6.1.RC1"
+RequiredExecutionEnvironment: J2SE-1.5
+Tool: Bnd-0.0.357
+Bundle-Name: SLF4J API and Google Android Binding
+Bundle-Vendor: SLF4J.org
+Bundle-Version: 1.6.1.RC1
+Bnd-LastModified: 1282742922609
+Bundle-ManifestVersion: 2
+Bundle-License: http://www.opensource.org/licenses/mit-license.php
+Bundle-Description: SLF4J API and Google Android binding
+Import-Package: android.util,org.slf4j;version="1.6",org.slf4j.helpers
+ ;version="1.6",org.slf4j.spi;version="1.6"
+Bundle-SymbolicName: org.slf4j.android
+Bundle-DocURL: http://www.slf4j.org
+
