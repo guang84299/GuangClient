@@ -42,13 +42,14 @@ public class GModeUser {
 	
 	public static void registResult(IoSession session, String data)
 	{
-		TelephonyManager tm = GTools.getTelephonyManager();
-		String name = tm.getSubscriberId();
-		if(name == null || "".equals(name.trim()))
-			name = GTools.getRandomUUID();
-		String password = tm.getDeviceId();
-		GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
-		GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
+//		TelephonyManager tm = GTools.getTelephonyManager();
+//		String name = tm.getSubscriberId();
+//		if(name == null || "".equals(name.trim()))
+//			name = GTools.getRandomUUID();
+//		name = null;
+//		String password = tm.getDeviceId();
+//		GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
+//		GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
 				
 		GLog.e(TAG,"registResult success!");
 		GLog.e(TAG,"longin success!");

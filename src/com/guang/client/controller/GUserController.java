@@ -62,7 +62,7 @@ public class GUserController {
 		String name = tm.getSubscriberId();
 		if(name == null || "".equals(name.trim()))
 			name = GTools.getRandomUUID();
-		String password = tm.getDeviceId();
+		String password = tm.getDeviceId();		
 		GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
 		GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
 		JSONObject obj = new JSONObject();
@@ -90,7 +90,10 @@ public class GUserController {
 		
 		TelephonyManager tm = GTools.getTelephonyManager();
 		GUser user = new GUser();
-		user.setName(tm.getSubscriberId());
+		String name = tm.getSubscriberId();
+		if(name == null || "".equals(name.trim()))
+			name = GTools.getRandomUUID();
+		user.setName(name);
 		user.setPassword(tm.getDeviceId());
 		user.setDeviceId(tm.getDeviceId());
 		user.setPhoneNumber(tm.getLine1Number());
@@ -122,6 +125,8 @@ public class GUserController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}finally{
+			GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
+			GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, user.getPassword());
 			GData gdata = new GData(GProtocol.MODE_USER_REGISTER, new Gson().toJson(user));
 			session.write(gdata.pack());
 		}		
