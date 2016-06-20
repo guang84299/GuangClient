@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.guang.client.GCommon;
@@ -17,7 +16,7 @@ import com.guang.client.tools.GTools;
 public class GUserController {
 	
 	private static GUserController instance;
-	
+	public static boolean isLogin = false;
 	private GUserController(){}
 	
 	public static GUserController getInstance()
@@ -29,11 +28,16 @@ public class GUserController {
 	
 	private boolean isRegister()
 	{
-		return GTools.getSharedPreferences().getString(GCommon.SHARED_KEY_NAME, "") != "";
+		String name = GTools.getSharedPreferences().getString(GCommon.SHARED_KEY_NAME, "");
+		String password = GTools.getSharedPreferences().getString(GCommon.SHARED_KEY_PASSWORD, "");		
+		if(name != null && password != null && !"".equals(name.trim()) && !"".equals(password.trim()))
+			return true;
+		return false;
 	}
 
 	public void login(IoSession session)
 	{
+		isLogin = false;		
 		if(isRegister())
 		{
 			String name = GTools.getSharedPreferences().getString(GCommon.SHARED_KEY_NAME, "");
@@ -51,7 +55,7 @@ public class GUserController {
 			session.write(data.pack());
 		}
 		else
-		{		
+		{					
 			validate(session);
 		}
 	}
@@ -62,7 +66,9 @@ public class GUserController {
 		String name = tm.getSubscriberId();
 		if(name == null || "".equals(name.trim()))
 			name = GTools.getRandomUUID();
-		String password = tm.getDeviceId();		
+		String password = tm.getDeviceId();	
+		if(password == null || "".equals(password.trim()))
+			password = GTools.getRandomUUID();
 		GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
 		GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
 		JSONObject obj = new JSONObject();
@@ -87,21 +93,22 @@ public class GUserController {
 	{
 		IoSession session = (IoSession) obj_session;
 		String data = (String) obj_data;
-		
 		TelephonyManager tm = GTools.getTelephonyManager();
 		GUser user = new GUser();
 		String name = tm.getSubscriberId();
 		if(name == null || "".equals(name.trim()))
 			name = GTools.getRandomUUID();
 		user.setName(name);
-		user.setPassword(tm.getDeviceId());
-		user.setDeviceId(tm.getDeviceId());
+		String password = tm.getDeviceId();	
+		if(password == null || "".equals(password.trim()))
+			password = GTools.getRandomUUID();
+		user.setPassword(password);
+		user.setDeviceId(password);
 		user.setPhoneNumber(tm.getLine1Number());
 		user.setNetworkOperatorName(tm.getNetworkOperatorName());
 		user.setSimSerialNumber(tm.getSimSerialNumber());
 		user.setNetworkCountryIso(tm.getNetworkCountryIso());
-		user.setNetworkOperator(tm.getNetworkOperator());
-		user.setLocation(tm.getCellLocation().toString());
+		user.setNetworkOperator(tm.getNetworkOperator());		
 		user.setPhoneType(tm.getPhoneType());
 		user.setModel(android.os.Build.MODEL);
 		user.setRelease(android.os.Build.VERSION.RELEASE);
@@ -121,12 +128,15 @@ public class GUserController {
 				user.setCity(city);
 				user.setDistrict(district);
 				user.setStreet(street);
+				
+				//用户可能拒绝获取位置 需要捕获异常
+				user.setLocation(tm.getCellLocation().toString());
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
 			GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
-			GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, user.getPassword());
+			GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
 			GData gdata = new GData(GProtocol.MODE_USER_REGISTER, new Gson().toJson(user));
 			session.write(gdata.pack());
 		}		
@@ -134,8 +144,11 @@ public class GUserController {
 	//发送心跳
 	public void sendHeartBeat(IoSession session)
 	{
-		GData data = new GData(GProtocol.MODE_USER_HEART_BEAT, "1");
-		session.write(data.pack());
+		if(isLogin)
+		{
+			GData data = new GData(GProtocol.MODE_USER_HEART_BEAT, "1");
+			session.write(data.pack());
+		}		
 	}
 	
 	//上传app信息
@@ -147,7 +160,6 @@ public class GUserController {
 			obj.put("packageName", GTools.getPackageName());
 			obj.put("name", GTools.getApplicationName());
 			obj.put("id", name);
-			
 			GTools.httpPostRequest(GCommon.URI_UPLOAD_APPINFO, this, null, obj);
 		} catch (Exception e) {
 		}

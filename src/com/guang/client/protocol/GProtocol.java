@@ -1,19 +1,15 @@
 package com.guang.client.protocol;
 
-import java.io.IOException;
-import java.io.StringReader;
+
 import java.lang.reflect.Method;
 
 import org.apache.mina.core.session.IoSession;
 import org.json.JSONObject;
 
-import android.util.Log;
+import com.guang.client.tools.GLog;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import com.guang.client.mode.GUser;
+
+
 
 /**
  * 自定义协议 基于json
@@ -47,7 +43,7 @@ public class GProtocol {
 			Method m = c.getMethod(methodName, args);
 			m.invoke(c, session, data.getString("body"));
 		} catch (Exception e) {
-			Log.e(TAG,"数据解析失败！" + e.getMessage());
+			GLog.e(TAG,"数据解析失败！" + e.getMessage());
 		}
 	}
 

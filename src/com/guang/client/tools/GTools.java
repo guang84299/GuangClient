@@ -247,7 +247,6 @@ public class GTools {
 						pairList.add(pair1);
 					}
 					
-
 					HttpEntity requestHttpEntity = new UrlEncodedFormEntity(
 							pairList, "UTF-8");
 					// URL使用基本URL即可，其中不需要加参数

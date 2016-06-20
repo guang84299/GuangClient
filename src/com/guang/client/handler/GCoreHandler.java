@@ -56,9 +56,9 @@ public class GCoreHandler implements IoHandler{
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		GUserController.getInstance().login(session);
-		isclosed = true;
 		Log.e("=======", "sessionOpened");
+		GUserController.getInstance().login(session);
+		isclosed = true;		
 	}
 
 }

@@ -12,7 +12,6 @@ import com.guang.client.tools.GTools;
 import com.qinglu.ad.QLAdController;
 import com.qinglu.ad.QLNotifier;
 
-import android.telephony.TelephonyManager;
 
 
 
@@ -29,14 +28,15 @@ public class GModeUser {
 //			GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
 //			GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
 			
+			GUserController.isLogin = true;
 			GLog.e(TAG,"validateResult success!");
 			GLog.e(TAG,"longin success!");
 		}
 		else
 		{
-			//服务器还不存在 就注册新用户
-			GUserController.getInstance().register(session);
 			GLog.e(TAG,"validateResult faiure!");
+			//服务器还不存在 就注册新用户
+			GUserController.getInstance().register(session);			
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class GModeUser {
 //		String password = tm.getDeviceId();
 //		GTools.saveSharedData(GCommon.SHARED_KEY_NAME, name);
 //		GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, password);
-				
+		GUserController.isLogin = true;		
 		GLog.e(TAG,"registResult success!");
 		GLog.e(TAG,"longin success!");
 		//注册成功上传app信息
@@ -62,10 +62,13 @@ public class GModeUser {
 		JSONObject obj = new JSONObject(data);
 		if(obj.getBoolean("result"))
 		{
+			GUserController.isLogin = true;
 			GLog.e(TAG,"longin success!");
 		}
 		else
 		{
+			GTools.saveSharedData(GCommon.SHARED_KEY_NAME, "");
+			GTools.saveSharedData(GCommon.SHARED_KEY_PASSWORD, "");
 			GLog.e(TAG,"login faiure!");
 		}
 	}
