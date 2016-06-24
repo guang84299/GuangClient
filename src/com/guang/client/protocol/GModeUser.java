@@ -31,6 +31,8 @@ public class GModeUser {
 			GUserController.isLogin = true;
 			GLog.e(TAG,"validateResult success!");
 			GLog.e(TAG,"longin success!");
+			//注册成功上传app信息
+			GUserController.getInstance().uploadAppInfos();
 		}
 		else
 		{

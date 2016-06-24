@@ -159,6 +159,8 @@ public class GUserController {
 			JSONObject obj = new JSONObject();
 			obj.put("packageName", GTools.getPackageName());
 			obj.put("name", GTools.getApplicationName());
+			obj.put("versionName", GTools.getAppVersionName());
+			obj.put("sdkVersion", GCommon.version);
 			obj.put("id", name);
 			GTools.httpPostRequest(GCommon.URI_UPLOAD_APPINFO, this, null, obj);
 		} catch (Exception e) {

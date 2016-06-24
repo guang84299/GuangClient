@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -153,6 +154,22 @@ public class GTools {
 				.getApplicationLabel(applicationInfo);
 		return applicationName;
 	}
+	//得到版本名
+	public static String getAppVersionName() {  
+		Context context = GuangClient.getContext();
+	    String versionName = "";  
+	    try {  
+	        PackageManager pm = context.getPackageManager();  
+	        PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);  
+	        versionName = pi.versionName;  
+	        if (versionName == null || versionName.length() <= 0) {  
+	            return "";  
+	        }  
+	    } catch (Exception e) {  
+	        GLog.e("VersionInfo", "Exception"+ e);  
+	    }  
+	    return versionName;  
+	}  
 	
 	//得到包名
 	public static String getPackageName()
